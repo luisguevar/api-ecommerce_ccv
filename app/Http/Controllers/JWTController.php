@@ -17,7 +17,7 @@ class JWTController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'loginAdmin', 'loginEcommerce', 'register']]);
     }
 
     /**
@@ -42,6 +42,7 @@ class JWTController extends Controller
             'name' => $request->name,
             'surname' => $request->surname,
             'email' => $request->email,
+            "type_user" => $request->type_user,
             'password' => Hash::make($request->password)
         ]);
 
@@ -56,7 +57,33 @@ class JWTController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request)
+    public function loginAdmin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+
+        }
+
+        if (!$token = auth('api')->attempt(
+            [
+                "email" => $request->email,
+                "password" => $request->password,
+                "state" => 1,
+                "type_user" => 2
+            ]
+        )) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
+    }
+
+    public function loginEcommerce(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -67,7 +94,13 @@ class JWTController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        if (!$token = auth('api')->attempt($validator->validated())) {
+        if (!$token = auth('api')->attempt(
+            [
+                "email" => $request->email,
+                "password" => $request->password,
+                "state" => 1
+            ]
+        )) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -115,11 +148,18 @@ class JWTController extends Controller
      */
     protected function respondWithToken($token)
     {
+        $user = auth('api')->user();
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60,
-            "user"=>auth('api')->user()
+            "user" => [
+                "name" => $user->name,
+                "surname" => $user->surname,
+                "email" => $user->email,
+                "role" => $user->role
+            ]
         ]);
     }
 }
