@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Ecommerce\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\Product\CategorieController;
 use App\Http\Controllers\Product\ImageController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Slider\SliderController;
 use App\Http\Controllers\UserController;
 use App\Models\Products\ProductImage;
 
@@ -62,4 +64,16 @@ Route::group(['prefix' => 'products'], function ($router) {
         Route::post('/update/{id}', [CategorieController::class, 'update']);
         Route::delete('/delete/{id}', [CategorieController::class, 'destroy']);
     });
+});
+
+Route::group(['prefix' => 'sliders'], function ($router) {
+    Route::get('/all', [SliderController::class, 'index']);
+    Route::post('/add', [SliderController::class, 'store']);
+    Route::post('/update/{id}', [SliderController::class, 'update']);
+    Route::delete('/delete/{id}', [SliderController::class, 'destroy']);
+});
+
+
+Route::group(['prefix' => 'ecommerce'], function ($router) {
+    Route::get('/home', [HomeController::class, 'index']);
 });

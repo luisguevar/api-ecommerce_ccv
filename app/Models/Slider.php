@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Models\Product;
+namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Categorie extends Model
+class Slider extends Model
 {
-    use SoftDeletes;
+    use HasFactory;
+
     protected $fillable = [
         "name",
         "imagen",
-        "icono",
+        "url",
     ];
 
     public function setCreatedAtAttribute($value)
@@ -24,10 +25,5 @@ class Categorie extends Model
     {
         date_default_timezone_set("America/Lima");
         $this->attributes["updated_at"] = Carbon::now();
-    }
-
-    public function products()
-    {
-        return $this->hasMany(Product::class);
     }
 }

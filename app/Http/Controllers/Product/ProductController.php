@@ -25,7 +25,7 @@ class ProductController extends Controller
     {
         $search = $request->search;
 
-        $products = Product::filterProduct($search)->orderBy("id", "desc")->paginate(30);
+        $products = Product::filterProduct($search)->orderBy("id", "desc")->paginate(100);
         return response()->json([
             "message" => 200,
             "total" => $products->total(),

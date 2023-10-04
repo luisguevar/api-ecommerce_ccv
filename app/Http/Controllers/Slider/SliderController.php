@@ -1,34 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\Product;
+namespace App\Http\Controllers\Slider;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product\Categorie;
-
+use App\Models\Slider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-
-class CategorieController extends Controller
+class SliderController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function __construct()
     {
         $this->middleware('auth:api');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->search;
+        /*  $search = $request->search; */
 
-        $categories = Categorie::where("name", "like", "%" . $search . "%")->orderBy("id", "desc")->get();
+        $sliders = Slider::orderBy("id", "desc")->get();
         return response()->json([
-            "categorias" => $categories
+            "sliders" => $sliders
         ]);
     }
 
@@ -51,12 +49,12 @@ class CategorieController extends Controller
     public function store(Request $request)
     {
         if ($request->hasFile("imagen_file")) {
-            $path = Storage::putFile("categorias", $request->file("imagen_file"));
+            $path = Storage::putFile("sliders", $request->file("imagen_file"));
             $request->request->add(["imagen" => $path]);
         }
-        $categorie = Categorie::create($request->all());
+        $slider = Slider::create($request->all());
         return response()->json([
-            "categorie" => $categorie
+            "slider" => $slider
         ]);
     }
 
@@ -91,19 +89,19 @@ class CategorieController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $categorie = Categorie::findOrFail($id);
+        $slider = Slider::findOrFail($id);
 
         if ($request->hasFile("imagen_file")) {
-            if ($categorie->imagen) {
-                Storage::delete($categorie->imagen);
+            if ($slider->imagen) {
+                Storage::delete($slider->imagen);
             }
-            $path = Storage::putFile("categorias", $request->file("imagen_file"));
+            $path = Storage::putFile("sliders", $request->file("imagen_file"));
             $request->request->add(["imagen" => $path]);
         }
 
-        $categorie->update($request->all());
+        $slider->update($request->all());
         return response()->json([
-            "categorie" => $categorie
+            "slider" => $slider
         ]);
     }
 
@@ -115,8 +113,8 @@ class CategorieController extends Controller
      */
     public function destroy($id)
     {
-        $categorie = Categorie::findOrFail($id);
-        $categorie->delete();
+        $slider = Slider::findOrFail($id);
+        $slider->delete();
         return response()->json(["message" => 200]);
     }
 }
