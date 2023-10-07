@@ -14,6 +14,26 @@ class ProductEResource extends JsonResource
      */
     public function toArray($request)
     {
+        // Obtén la imagen principal
+        $imagenPrincipal = [
+            "id" => $this->resource->id,
+            "file_name" => $this->resource->imagen,
+            "imagen" => env("APP_URL") . "storage/" . $this->resource->imagen,
+            "size" => null, // Agrega el tamaño de la imagen principal si lo tienes
+            "type" => null, // Agrega el tipo de la imagen principal si lo tienes
+        ];
+
+        // Construye el arreglo de imágenes
+        $images = $this->resource->images->map(function ($img) {
+            return [
+                "id" => $img->id,
+                "file_name" => $img->file_name,
+                "imagen" => env("APP_URL") . "storage/" . $img->imagen,
+                "size" => $img->size,
+                "type" => $img->type
+            ];
+        })->prepend($imagenPrincipal); // Agrega la imagen principal al principio del arreglo
+
         return [
             "id" => $this->resource->id,
             "title" => $this->resource->title,
@@ -32,17 +52,7 @@ class ProductEResource extends JsonResource
             "description" => $this->resource->description,
             "imagen" => env("APP_URL") . "storage/" . $this->resource->imagen,
             "stock" => $this->resource->stock,
-
-            "images" => $this->resource->images->map(function ($img) {
-                return [
-                    "id" => $img->id,
-                    "file_name" => $img->file_name,
-                    "imagen" => env("APP_URL") . "storage/" . $img->imagen,
-                    "size" => $img->size,
-                    "type" => $img->type
-
-                ];
-            }),
+            "images" => $images, // Utiliza el arreglo de imágenes construido
         ];
     }
 }
