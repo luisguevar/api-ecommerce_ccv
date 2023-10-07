@@ -76,4 +76,5 @@ Route::group(['prefix' => 'sliders'], function ($router) {
 
 Route::group(['prefix' => 'ecommerce'], function ($router) {
     Route::get('/home', [HomeController::class, 'index']);
+    Route::get('/detail-product/{slug}', [HomeController::class, 'detail_product']);
 });

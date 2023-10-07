@@ -73,6 +73,21 @@ class HomeController extends Controller
         } */
     }
 
+    public function detail_product($slug_product)
+    {
+        $product = Product::where("slug",$slug_product)->first();
+        if(!$product){
+            return response()->json(["message" => 403]);
+        }
+        $product_relateds = Product::where("id","<>",$product->id)->where("categorie_id",$product->categorie_id)->orderBy("id","asc")->get();
+        return response()->json(["message" => 200 ,
+            "product_detail" => ProductEResource::make($product),
+            "product_relateds" => $product_relateds->map(function($product){
+                return ProductEResource::make($product);
+            })
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
