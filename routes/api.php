@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Ecommerce\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -77,4 +78,8 @@ Route::group(['prefix' => 'sliders'], function ($router) {
 Route::group(['prefix' => 'ecommerce'], function ($router) {
     Route::get('/home', [HomeController::class, 'index']);
     Route::get('/detail-product/{slug}', [HomeController::class, 'detail_product']);
+
+    Route::group(['prefix' => 'cart'], function ($router) {
+        Route::resource("add", CartController::class);
+    });
 });
