@@ -15,8 +15,8 @@ class CartShopResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => $this->resouce->id,
-            "user_id" => $this->resouce->user_id,
+            "id" => $this->resource->id,
+            "user_id" => $this->resource->user_id,
             "user" => [
                 "id" =>  $this->resource->client->id,
                 "name" => $this->resource->client->name
@@ -26,11 +26,11 @@ class CartShopResource extends JsonResource
                 "title" => $this->resource->product->title,
                 "imagen" => env("APP_URL") . "storage/" . $this->resource->product->imagen,
             ],
-            "product_id" => $this->resouce->product_id,
-            "cantidad" => $this->resouce->cantidad,
-            "precio_unitario" => $this->resouce->precio_unitario,
-            "subtotal" => $this->resouce->subtotal,
-            "total" => $this->resouce->total
+            "product_id" => $this->resource->product_id,
+            "cantidad" => $this->resource->cantidad,
+            "precio_unitario" => $this->resource->precio_unitario,
+            "subtotal" => $this->resource->subtotal,
+            "total" => $this->resource->total
         ];
     }
 }

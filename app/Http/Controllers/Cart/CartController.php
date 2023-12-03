@@ -47,6 +47,12 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
+        //validación de producto existente
+        $validate_cart_shop = CartShop::where("product_id", $request->product_id)->first();
+        if ($validate_cart_shop) {
+            return response()->json(["message" => 403, "message_text" => "EL PRODUCTO SELECCIONADO YA EXISTE"]);
+        }
+
         //validacion de stock
 
         $product = Product::findOrFail($request->product_id);
@@ -89,6 +95,13 @@ class CartController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        //validación de producto existente
+        $validate_cart_shop = CartShop::where("id", "<>", $id)->where("product_id", $request->product_id)->first();
+        if ($validate_cart_shop) {
+            return response()->json(["message" => 403, "message_text" => "EL PRODUCTO SELECCIONADO YA EXISTE"]);
+        }
+
         //validacion de stock
 
         $product = Product::findOrFail($request->product_id);

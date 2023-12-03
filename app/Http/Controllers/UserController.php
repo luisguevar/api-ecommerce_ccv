@@ -8,11 +8,11 @@ use App\Models\User;
 class UserController extends Controller
 {
 
-    public function __construct()
+   /*  public function __construct()
     {
         $this->middleware('auth:api');
     }
-
+ */
     /**
      * Display a listing of the resource.
      *
@@ -27,8 +27,6 @@ class UserController extends Controller
         /* filterAdvance está en el modelo como scope */
         $users = User::filterAdvance($state, $search)
             ->where("type_user", 2)->orderBy("id", "desc")->paginate(20);
-
-
 
         return response()->json([
             "total" => $users->total(),

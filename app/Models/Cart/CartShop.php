@@ -32,7 +32,7 @@ class CartShop extends Model
 
     public function client()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, "user_id"); //laravel interpreta client_id por eso le decimos que no es eso
     }
 
     public function product()
